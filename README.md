@@ -1,2 +1,4 @@
-voltage-divider-with-multiple-resistors
+voltage divider with multiple resistors
 =======================================
+
+

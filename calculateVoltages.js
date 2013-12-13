@@ -1,14 +1,14 @@
+var voltage_in = 5;
 var resistors = [
-    220,
-    560,
-    1000,
-    4700,
+    300,
+    600,
+    1400,
+    2500,
     10000,
     1000000,
     10000000
 ];
-var voltage_in = 5;
-var pull_up = 1000;
+var pull_up = 500;
 var numberOfResistors = 4;
 
 console.log();
@@ -44,6 +44,7 @@ console.log('binary encoding for resistors, e.g. 1010 ... 4th and 2nd resistor n
 
 console.log();
 console.log('encoding  -  voltage out');
+var voltages = [];
 for(var i = 0; i < maxEncoding; i++) {
     var resistorsTakenOut = [];
     var encoding = i; /* binary encoding for resistors, e.g. 1010 ... 4th and 2nd resistor not connected, 3nd and 1st resistor connected */
@@ -62,5 +63,34 @@ for(var i = 0; i < maxEncoding; i++) {
     }
 
     voltage = getVoltageOutForResistors(resistorsTakenOut);
-    console.log(strEncoding+'      -  '+voltage+ ' V');
+    if(isNaN(voltage)) {
+        voltage = voltage_in;
+    }
+
+    voltages.push({
+        strEncoding : strEncoding,
+        voltage : voltage
+    });
+
 }
+voltages = voltages.sort(function(a, b) {
+    return a.voltage - b.voltage;
+});
+
+var oldVoltage = 0;
+var voltagesThatNeedAdjustment = 0;
+voltages.forEach(function(voltage) {
+    var voltageOK;
+    var difference = voltage.voltage - oldVoltage;
+    if(difference < 0.1) {
+        voltageOK = '  - voltage differs only by '+difference;
+        voltagesThatNeedAdjustment++;
+    } else {
+        voltageOK = '  - voltage ok';
+    }
+    oldVoltage = voltage.voltage;
+    console.log(voltage.strEncoding+'      -  '+voltage.voltage+ ' V'+voltageOK);
+});
+console.log();
+console.log('#voltages that need adjustement '+voltagesThatNeedAdjustment);
+console.log();
