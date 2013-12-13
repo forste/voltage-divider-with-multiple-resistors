@@ -40,6 +40,9 @@ function getVoltageOut(numberOfResistors, resistorsTakenOut) {
 var getVoltageOutForResistors = getVoltageOut.bind(null, numberOfResistors);
 var maxEncoding = Math.pow(2, numberOfResistors);
 
+console.log('binary encoding for resistors, e.g. 1010 ... 4th and 2nd resistor not connected, 3nd and 1st resistor connected');
+
+console.log();
 console.log('encoding  -  voltage out');
 for(var i = 0; i < maxEncoding; i++) {
     var resistorsTakenOut = [];
@@ -47,35 +50,15 @@ for(var i = 0; i < maxEncoding; i++) {
     var voltage;
     var strEncoding = '';
 
-    if(encoding%2 == 1) {
-        resistorsTakenOut.push(0);
-        strEncoding += '1';
-    } else {
-        strEncoding += '0';
-    }
-
-    encoding = Math.floor(encoding / 2);
-    if(encoding%2 == 1) {
-        resistorsTakenOut.push(1);
-        strEncoding = '1' + strEncoding;
-    } else {
-        strEncoding = '0' + strEncoding;
-    }
-
-    encoding = Math.floor(encoding / 2);
-    if(encoding%2 == 1) {
-        resistorsTakenOut.push(2);
-        strEncoding = '1' + strEncoding;
-    } else {
-        strEncoding = '0' + strEncoding;
-    }
-
-    encoding = Math.floor(encoding / 2);
-    if(encoding%2 == 1) {
-        resistorsTakenOut.push(3);
-        strEncoding = '1' + strEncoding;
-    } else {
-        strEncoding = '0' + strEncoding;
+    //calculate resistors taken out
+    for(var j = 0; j < resistors.length; j++) {
+        if(encoding%2 == 1) {
+            resistorsTakenOut.push(j);
+            strEncoding = '1' + strEncoding;
+        } else {
+            strEncoding = '0' + strEncoding;
+        }
+        encoding = Math.floor(encoding / 2);
     }
 
     voltage = getVoltageOutForResistors(resistorsTakenOut);
